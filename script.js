@@ -49,7 +49,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
       "Phone: " + f.phone.value.trim(),
       "Site location: " + f.location.value.trim(),
       "For: " + f.type.value,
-      "Rough length: " + (f.length.value.trim() || "-"),
+      "Rough length: " + (f.panels.value.trim() || "-"),
       "Dates: " + (f.dates.value.trim() || "-"),
       "Notes: " + (f.notes.value.trim() || "-")
     ];
@@ -63,6 +63,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     var btn = form.querySelector("button[type=submit],button:not([type])");
     if (btn) btn.disabled = true;
     msg.textContent = "Sending…";
+    msg.scrollIntoView({ block: "center", behavior: "smooth" });
 
     var req = WEB3FORMS_KEY
       ? fetch("https://api.web3forms.com/submit", {
@@ -76,7 +77,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
           body: JSON.stringify({
             _subject: subject, _template: "table", _captcha: "false",
             Name: f.name.value.trim(), Phone: f.phone.value.trim(), "Site location": f.location.value.trim(),
-            For: f.type.value, "Panels or metres": f.length.value.trim() || "-",
+            For: f.type.value, "Panels or metres": f.panels.value.trim() || "-",
             "Hire dates": f.dates.value.trim() || "-", Notes: f.notes.value.trim() || "-"
           })
         });

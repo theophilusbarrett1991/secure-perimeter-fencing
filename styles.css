@@ -188,3 +188,5 @@ input.bad{border-color:#ff5a4d}
   .bar__call{background:var(--y);color:var(--k)}
   .bar__q{background:var(--k);color:var(--y);border-top:2px solid var(--y)}
 }
+
+.form__msg{scroll-margin-bottom:90px;font-weight:600}
