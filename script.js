@@ -1,6 +1,8 @@
 // ---- Settings -------------------------------------------------------------
 // Where quote requests go.
 var QUOTE_EMAIL = "secureperimeter2025@gmail.com";
+// The form sends to this address; Namecheap forwards it to the inbox above.
+var FORM_EMAIL = "quotes@herasfencingleeds.co.uk";
 // The form sends straight to QUOTE_EMAIL through formsubmit.co (free, no account).
 // If sending ever fails, it falls back to opening the visitor's email app.
 // Optional: a Web3Forms access key here is used instead of formsubmit.co.
@@ -71,7 +73,7 @@ document.getElementById("yr").textContent = new Date().getFullYear();
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: subject, from_name: "Website quote form", message: lines.join("\n") })
         })
-      : fetch("https://formsubmit.co/ajax/" + QUOTE_EMAIL, {
+      : fetch("https://formsubmit.co/ajax/" + FORM_EMAIL, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({
