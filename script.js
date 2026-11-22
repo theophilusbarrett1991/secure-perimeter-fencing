@@ -1,9 +1,9 @@
 // ---- Settings -------------------------------------------------------------
 // Where quote requests go.
 var QUOTE_EMAIL = "secureperimeter2025@gmail.com";
-// Optional: paste a Web3Forms access key here (free at web3forms.com) and the
-// form will send straight to the inbox without opening the visitor's email app.
-// Leave empty and the form opens the visitor's email app with everything filled in.
+// The form sends straight to QUOTE_EMAIL through formsubmit.co (free, no account).
+// If sending ever fails, it falls back to opening the visitor's email app.
+// Optional: a Web3Forms access key here is used instead of formsubmit.co.
 var WEB3FORMS_KEY = "";
 // ---------------------------------------------------------------------------
 
@@ -55,25 +55,40 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     ];
     var subject = "Fencing quote request - " + f.location.value.trim();
 
-    if (WEB3FORMS_KEY) {
-      msg.textContent = "Sending…";
-      fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: subject, from_name: "Website quote form", message: lines.join("\n") })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (d) {
-          if (!d.success) throw new Error();
-          form.reset();
-          msg.textContent = "Thanks, that's sent. We'll be in touch shortly.";
-        })
-        .catch(function () {
-          msg.textContent = "Sorry, that didn't send. Please call 07514 116277.";
-        });
-    } else {
+    function openEmailApp() {
       window.location.href = "mailto:" + QUOTE_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
       msg.textContent = "Your email app should open with the details filled in. Just press send. If nothing opens, call 07514 116277.";
     }
+
+    var btn = form.querySelector("button[type=submit],button:not([type])");
+    if (btn) btn.disabled = true;
+    msg.textContent = "Sending…";
+
+    var req = WEB3FORMS_KEY
+      ? fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: subject, from_name: "Website quote form", message: lines.join("\n") })
+        })
+      : fetch("https://formsubmit.co/ajax/" + QUOTE_EMAIL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            _subject: subject, _template: "table", _captcha: "false",
+            Name: f.name.value.trim(), Phone: f.phone.value.trim(), "Site location": f.location.value.trim(),
+            For: f.type.value, "Panels or metres": f.length.value.trim() || "-",
+            "Hire dates": f.dates.value.trim() || "-", Notes: f.notes.value.trim() || "-"
+          })
+        });
+
+    req
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!(d.success === true || d.success === "true")) throw new Error();
+        form.reset();
+        msg.textContent = "Thanks, that's sent. We'll be in touch shortly.";
+      })
+      .catch(openEmailApp) // never lose an enquiry: fall back to the visitor's email app
+      .then(function () { if (btn) btn.disabled = false; });
   });
 })();
