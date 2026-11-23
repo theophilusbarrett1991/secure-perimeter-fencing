@@ -190,3 +190,14 @@ input.bad{border-color:#ff5a4d}
 }
 
 .form__msg{scroll-margin-bottom:90px;font-weight:600}
+
+/* Reviews */
+.review{margin:0;max-width:860px;background:var(--k);border-left:6px solid var(--y);padding:34px 38px;position:relative}
+.review__stars{color:var(--y);font-size:1.6rem;letter-spacing:.12em;line-height:1;margin-bottom:14px}
+.review blockquote{margin:0}
+.review blockquote p{color:#fff;font-size:1.18rem;line-height:1.6;margin:0}
+.review figcaption{margin-top:20px;display:flex;flex-direction:column;gap:2px}
+.review figcaption strong{font-family:var(--head);font-style:italic;font-weight:800;text-transform:uppercase;font-size:1.35rem;color:var(--y);letter-spacing:.02em}
+.review figcaption span{color:var(--g);font-size:.95rem}
+.review__actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+@media (max-width:640px){.review{padding:24px 20px}.review blockquote p{font-size:1.05rem}.review__actions .btn{font-size:1.05rem}}
